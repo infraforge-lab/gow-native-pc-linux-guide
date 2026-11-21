@@ -11,8 +11,8 @@ The Linux support is experimental. The prebuilt Linux package described by upstr
 ### 1. Check the requirements
 
 - x86-64 Linux system with an appropriate GPU driver
-- OpenGL 4.3 or newer, with the required texture-barrier support
-- At least 8 GB RAM; 16 GB is recommended for compilation
+- A GPU and graphics driver compatible with the upstream runtime; check the current upstream Linux notes for the graphics capabilities required by your release
+- Sufficient RAM for the launcher and compilation workload; memory use varies by system and build. The upstream documentation does not establish 16 GB as a universal requirement
 - Free disk space for the launcher, runtime, prepared game data and generated build
 - Your own compatible God of War disc image
 - Internet access for downloading the runtime and build components
@@ -22,16 +22,17 @@ For exact package requirements and current limitations, read the upstream [Linux
 ### 2. Download the Linux package
 
 1. Open the upstream [Releases page](https://github.com/Vnnc1/gow-native-pc/releases).
-2. Download the Linux x86-64 Ubuntu 26.04 experimental `.run` installer and its accompanying `.sha256` checksum file, when available.
+2. Download the Linux x86-64 Ubuntu 26.04 experimental `.run` installer and the release's `SHA256SUMS.txt` file.
 3. Keep both files in the same directory.
 
-Verify the downloaded installer using the checksum file. For example, from the download directory:
+Verify the installer against its entry in `SHA256SUMS.txt`. Set `INSTALLER` to the exact name of the downloaded `.run` file:
 
 ```bash
-sha256sum -c gow-native-pc-linux-x86_64-ubuntu26.04-experimental.run.sha256
+INSTALLER='gow-native-pc-linux-x86_64-ubuntu26.04-experimental.run'
+grep -F "  ${INSTALLER}" SHA256SUMS.txt | sha256sum --check
 ```
 
-The exact checksum filename may change between releases; use the filename supplied with that release.
+The command filters the checksum manifest for that installer and passes the matching checksum line to `sha256sum` for verification. A successful check reports `OK`. If no matching line is found or verification fails, do not run the installer; check that the asset name matches the release manifest and download both files again.
 
 ### 3. Install the launcher
 
@@ -135,6 +136,7 @@ Use the current upstream [Linux guide](https://github.com/Vnnc1/gow-native-pc/bl
 - [Configuration and Steam launch](CONFIGURATION.md) — tested local wrapper and game settings
 - [Troubleshooting](TROUBLESHOOTING.md) — issues and diagnostic steps
 - [Credits and licensing](CREDITS.md) — upstream attribution and license notes
+- [Documentation license](LICENSE) — CC BY 4.0 applies to the original documentation in this repository
 
 ## Important technical distinction
 
