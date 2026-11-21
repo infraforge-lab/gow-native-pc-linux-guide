@@ -1,48 +1,157 @@
-# God of War Native PC on Linux
+# God of War Native PC port on Linux
 
-Independent documentation for running **God of War (2005)** through the native PC recompilation project on Linux.
+A practical community guide to installing and running the **God of War (PS2) native PC port / recompilation project** on Linux. This is an independent guide, not an official Sony release and not an official document from the upstream maintainers.
 
-This guide is based on a working installation on a Minisforum G1 Pro.
+> **You must provide your own legally obtained copy of the game.** The upstream project and this guide do not distribute the game, ISO images, BIOS files, extracted assets, saves or other proprietary game data.
 
-## Tested environment
+## Quick start
+
+The Linux support is experimental. The prebuilt Linux package described by upstream targets Ubuntu 26.04 on x86-64; do not assume it works unchanged on every distribution.
+
+### 1. Check the requirements
+
+- x86-64 Linux system with an appropriate GPU driver
+- OpenGL 4.3 or newer, with the required texture-barrier support
+- At least 8 GB RAM; 16 GB is recommended for compilation
+- Free disk space for the launcher, runtime, prepared game data and generated build
+- Your own compatible God of War disc image
+- Internet access for downloading the runtime and build components
+
+For exact package requirements and current limitations, read the upstream [Linux installation notes](https://github.com/Vnnc1/gow-native-pc/blob/main/docs/linux.md).
+
+### 2. Download the Linux package
+
+1. Open the upstream [Releases page](https://github.com/Vnnc1/gow-native-pc/releases).
+2. Download the Linux x86-64 Ubuntu 26.04 experimental `.run` installer and its accompanying `.sha256` checksum file, when available.
+3. Keep both files in the same directory.
+
+Verify the downloaded installer using the checksum file. For example, from the download directory:
+
+```bash
+sha256sum -c gow-native-pc-linux-x86_64-ubuntu26.04-experimental.run.sha256
+```
+
+The exact checksum filename may change between releases; use the filename supplied with that release.
+
+### 3. Install the launcher
+
+Run the downloaded installer from its directory:
+
+```bash
+bash gow-native-pc-linux-x86_64-ubuntu26.04-experimental.run
+```
+
+The upstream Linux installer installs under the user's local share directory by default and does not require root. It does not install system dependencies. It also refuses to overwrite an existing destination to protect existing game data and saves.
+
+If the release uses a different asset name, substitute the exact downloaded filename.
+
+### 4. Open the launcher and prepare your own game image
+
+The installer prints or documents its installation destination. Open the installed directory and start the launcher:
+
+```bash
+cd "$HOME/.local/share/gow-native-pc-<version>"
+bash start-linux.sh
+```
+
+Replace `<version>` with the version directory actually installed.
+
+In the launcher's **Install** page:
+
+1. Install any missing system dependencies requested by the launcher or upstream Linux guide.
+2. Select **Add ISO / Install disc** (wording can vary by release) and choose your own compatible game image.
+3. Follow the launcher steps to prepare the disc, fetch the required runtime and compile the game.
+4. Wait for the process to finish; compilation time depends on CPU, memory, storage and downloads.
+
+The ISO is processed locally. The project does not provide the game image. Do not use a disc image unless you have the legal right to use it.
+
+### 5. Launch the game
+
+When installation and compilation finish, use the launcher's **Play** action to confirm that the game starts correctly before configuring Steam.
+
+### 6. Optional: add the working launch script to Steam
+
+The Steam setup below documents the local integration used on the test machine in this guide. It is **not** a universal upstream Steam installer or a script automatically created by every Linux package.
+
+1. Add a **Non-Steam Game** in Steam.
+2. Set **Target** to the full path of your own executable launch wrapper. In the tested setup, the wrapper was stored at:
+
+   ```text
+   <HOME_DIRECTORY>/bin/gow-native-direct
+   ```
+
+3. Leave **Start In** and **Launch Options** blank, unless your own wrapper requires otherwise.
+4. In the shortcut's **Compatibility** settings, leave Proton compatibility disabled for this native Linux launch.
+5. Launch the shortcut and verify that the game opens.
+
+The wrapper must be created and configured for your own checkout and installation paths. See [Configuration and Steam launch](CONFIGURATION.md) for what the tested wrapper validates and how it invokes the native session helper.
+
+---
+
+## Tested environment and results
+
+| Distribution / hardware | What was tested | Result |
+|---|---|---|
+| Ubuntu 26.04.1 LTS, GNOME 50.1 Wayland, Minisforum G1 Pro, NVIDIA RTX 5060 8 GB | Native Linux runtime components and a local Steam launch wrapper | **Game launch confirmed** |
+| Other Ubuntu releases | Not tested in this guide | Unknown |
+| SteamOS / Steam Deck | Not tested in this guide | Not validated |
+| Other distributions and GPUs | Not tested in this guide | Unknown |
+
+The successful result above applies to the documented machine and software snapshot; it is not a compatibility guarantee for other systems.
+
+### Test machine details
 
 - **Device:** Minisforum G1 Pro
-- **Operating system:** Ubuntu 26.04.1 LTS (Resolute)
+- **OS:** Ubuntu 26.04.1 LTS (Resolute)
 - **Desktop:** GNOME 50.1 / Wayland
 - **GPU:** NVIDIA GeForce RTX 5060 (8 GB)
 - **Architecture:** x86_64
 - **Storage:** NVMe SSD
 
-Versions of the NVIDIA driver and CUDA are environment-specific and may differ from your installation.
+This guide does not claim that every Linux distribution, GPU or Steam Deck configuration has been tested.
 
-## Project
+## Build from source (alternative)
 
-- Upstream project: https://github.com/Vnnc1/gow-native-pc
-- Upstream snapshot examined: 0.6.1
-- Upstream commit examined: `4152d910a67564436db94f4c1b23f7ec4afce9db`
+If you are not using the prebuilt Ubuntu experimental package, follow the upstream instructions for your distribution and the exact revision you checked out.
 
-This repository is an independent Linux usage and troubleshooting guide. It is not affiliated with or endorsed by the upstream project.
+The current upstream Linux development guide describes the source build entry point as:
 
-## Status
+```bash
+bash build.sh
+```
 
-God of War I was launched successfully through Steam using the project's native Linux runtime components and a local launch script. Proton compatibility was disabled for this setup.
+For a build that imports your own disc image, the upstream guide documents:
 
-The upstream package manifest examined during documentation indicated `contains_game_data: false` and `steam_deck_validated: false`.
+```bash
+bash build.sh --discs "/path/to/your/game.iso" --jobs 2
+```
 
-## Documentation
+Use the current upstream [Linux guide](https://github.com/Vnnc1/gow-native-pc/blob/main/docs/linux.md) for the complete dependency list and distribution-specific instructions. Do not assume that the older `setup-linux.sh` workflow described in historical investigation notes is the correct entry point for a newer upstream revision.
 
-- [Dependencies](DEPENDENCIES.md)
-- [Build notes](BUILD.md)
-- [Configuration and Steam launch](CONFIGURATION.md)
-- [Troubleshooting](TROUBLESHOOTING.md)
-- [Credits and licensing](CREDITS.md)
+## Troubleshooting and technical notes
 
-## Important technical note
+- [Dependencies](DEPENDENCIES.md) — runtime libraries, development tools and Qt SDK notes
+- [Build notes](BUILD.md) — observed CMake settings and build investigation
+- [Configuration and Steam launch](CONFIGURATION.md) — tested local wrapper and game settings
+- [Troubleshooting](TROUBLESHOOTING.md) — issues and diagnostic steps
+- [Credits and licensing](CREDITS.md) — upstream attribution and license notes
 
-The game executable `SCUS_973.99` is a 32-bit MIPS game ELF. It is not a native x86_64 Linux executable. The host-side launcher and runtime tools are x86-64 ELF binaries.
+## Important technical distinction
 
-## Legal notice
+The game's `SCUS_973.99` executable is a 32-bit MIPS game ELF. It is not a native x86-64 Linux application. The host-side launcher and runtime tools are x86-64 ELF binaries.
 
-This repository does not distribute game files, ISO images, BIOS files, save data, proprietary assets, or compiled game binaries. You must provide your own legally obtained game data and comply with applicable laws and the upstream project's license.
+## Project information
 
-See [CREDITS.md](CREDITS.md) for attribution and licensing notes.
+- **Upstream project:** [Vnnc1/gow-native-pc](https://github.com/Vnnc1/gow-native-pc)
+- **Upstream snapshot examined during the original investigation:** 0.6.1
+- **Upstream commit examined:** `4152d910a67564436db94f4c1b23f7ec4afce9db`
+
+Upstream versions and Linux packaging can change. Always check the release notes and Linux documentation for the version you download.
+
+## Independence and legal notice
+
+This guide was written independently by a community user and is **not produced, reviewed, maintained or endorsed by the upstream project maintainers, Sony or the rights holders**. “God of War” is a trademark of its respective owner.
+
+No game files, ISO images, BIOS files, proprietary assets, saves or compiled game binaries are distributed in this repository. You are responsible for obtaining and using your own game data lawfully and for complying with the upstream project's license.
+
+See [CREDITS.md](CREDITS.md) for attribution and upstream licensing notes.
