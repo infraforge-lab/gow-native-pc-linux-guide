@@ -4,6 +4,11 @@ A practical community guide to installing and running the **God of War (PS2) nat
 
 > **You must provide your own legally obtained copy of the game.** The upstream project and this guide do not distribute the game, ISO images, BIOS files, extracted assets, saves or other proprietary game data.
 
+> **Scope of this guide:** the installation flow below was tested only on
+> Ubuntu 26.04.1 LTS (GNOME 50.1 / Wayland) with a Minisforum G1 Pro and
+> NVIDIA RTX 5060 8 GB. Results on SteamOS, other Ubuntu releases,
+> distributions, GPUs and desktop environments are unverified.
+
 ## Quick start
 
 The Linux support is experimental. The prebuilt Linux package described by upstream targets Ubuntu 26.04 on x86-64; do not assume it works unchanged on every distribution.
