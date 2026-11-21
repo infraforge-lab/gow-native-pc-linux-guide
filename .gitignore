@@ -1,0 +1,26 @@
+# Local secrets and environment files
+.env
+.env.*
+!.env.example
+
+# Local logs and diagnostic output
+*.log
+logs/
+
+# Game data, disc images, executable assets and user saves
+*.iso
+*.bin
+*.elf
+*.ps2
+saves/
+**/.gow-save-slots/
+
+# Local runtime/build outputs
+build/
+**/build/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
