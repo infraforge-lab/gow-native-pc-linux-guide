@@ -29,10 +29,11 @@ Verify the installer against its entry in `SHA256SUMS.txt`. Set `INSTALLER` to t
 
 ```bash
 INSTALLER='gow-native-pc-linux-x86_64-ubuntu26.04-experimental.run'
-grep -F "  ${INSTALLER}" SHA256SUMS.txt | sha256sum --check
+
+grep -F "$INSTALLER" SHA256SUMS.txt | sha256sum --check -
 ```
 
-The command extracts the manifest entry for that exact installer and asks `sha256sum` to verify the file. A successful check reports `OK`. If the command finds no matching entry or reports a failure, do not run the installer. Confirm that you downloaded the manifest from the same release as the installer and that the asset name matches exactly.
+The release manifest uses the format `hash *filename`. The command selects the matching entry and passes it through standard input to `sha256sum --check -`, which verifies the downloaded installer. A successful check reports `OK`. If the command finds no matching entry or reports a failure, do not run the installer. Confirm that you downloaded the manifest from the same release as the installer and that the asset name matches exactly.
 
 > Release formats can change. Follow the checksum filename and verification instructions attached to the specific release you download. For releases publishing a single `SHA256SUMS.txt`, use the command above; older releases may provide individual `.sha256` files.
 
